@@ -1,0 +1,96 @@
+ <!DOCTYPE html>
+<html>
+	<head>
+		<title>Quiz lista de questões</title>
+		<meta charset="utf-8">
+		<style>
+		 ol.answer {list-style-type:lower-latin;}
+       .cor {
+         color: green;
+       }
+		</style>
+		 <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+       <script type="text/javascript" src="quiz.js"></script>
+	</head>
+	<body>
+		<h1>Questionário</h1>
+      <button type="button" id="loadQuestions">Load Questions</button>
+      <button type="button" id="loadAnswers">Load Answers</button>
+      <button type="button" id="verifyAnsewers">Verify Ansewers</button>
+		<br>
+		<div id="demo"></div>
+      <div id="showResps"></div>
+      
+		<script type="text/javascript">
+
+         var mydata = myData.quiz.question;
+         var buttons = {'one': false, 'two': false, 'three': false}
+
+         $("#loadQuestions").click(function(event){ 
+            if(buttons.one) return false
+            for (i=0; i < mydata.length; i++){
+               $("#demo").append('<div id="question'+[i+1]+'"><h3> '+[i+1]+'. ' +mydata[i].text+'</h3></div>');
+            }   
+            buttons.one = true         
+         });             
+
+         $("#loadAnswers").click(function(event){ 
+            if(buttons.two || !buttons.one) return false
+            for (i=0; i < mydata.length; i++){
+               for (j=0; j < mydata[i].answer.length; j++) {
+                  $("#question"+[i+1]).append('<input type="radio" name="radio'+[i+1]+'" value="' +mydata[i].answer[j].__text + '" id="radio'+[i+1]+'"> ' + [j+1] + '. ' +mydata[i].answer[j].__text + '<br>');
+               }               
+            }   
+            buttons.two = true         
+         }); 
+
+         $("#verifyAnsewers").click(function(event){ 
+            let respostas = []
+            let corretas = []
+
+            if(buttons.three || !buttons.one || !buttons.two) return false
+          
+            let respQ1 = $("#question1")[0];
+            let respQ2 = $("#question2")[0];
+            let respQ3 = $("#question3")[0];
+
+            for (let i = 0; i < respQ1.children.length; i++) {
+               if(i %2 !== 0) {
+                  if(respQ1.children[i].checked) {
+                     respostas.push(respQ1.children[i].defaultValue)              
+                  }
+               }
+            }  if(respostas.length === 0) respostas.push("Resposta não informada!")
+
+            for (let i = 0; i < respQ2.children.length; i++) {
+               if(i %2 !== 0) {
+                  if(respQ2.children[i].checked) {
+                     respostas.push(respQ2.children[i].defaultValue)           
+                  }
+               }
+            }  if(respostas.length === 1) respostas.push("Resposta não informada!")
+
+            for (let i = 0; i < respQ3.children.length; i++) {
+               if(i %2 !== 0) {
+                  if(respQ3.children[i].checked) {
+                     respostas.push(respQ3.children[i].defaultValue)              
+                  }
+               }
+            }  if(respostas.length === 2) respostas.push("Resposta não informada!")   
+
+            for (i=0; i < mydata.length; i++){
+               for (j=0; j < mydata[i].answer.length; j++) {
+                  if(mydata[i].answer[j]._value === 1) corretas.push(mydata[i].answer[j].__text)      
+               }               
+            } 
+
+            // EXIBINDO RESPOSTAS
+            $("#showResps").append('<div"><hr><h4> Suas Respostas: </h4> '+ respostas[0] + '<br>' + respostas[1] + '<br>' + respostas[2] +' </div>');
+            $("#showResps").append('<div"><hr><h4> Respostas corretas: </h4> '+ corretas[0] + '<br>' + corretas[1] + '<br>' + corretas[2] +' </div>');            
+
+            buttons.three = true          
+         });                 
+
+	</script>
+	</body>
+</html>
